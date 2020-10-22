@@ -2,26 +2,24 @@ import numpy as np
 import collections 
 
 
-# Readfile
+# create qry_list & doc_list
 
-text_file = open('./doc_list.txt', "r")
-docs = text_file.read().splitlines()
+raw_file = open('doc_list.txt', "r")
+docs = raw_file.read().splitlines()
 
-text_file = open('./query_list.txt', "r")
-queries = text_file.read().splitlines()
+raw_file = open('query_list.txt', "r")
+queries = raw_file.read().splitlines()
 
 doc_list=[]
 for doc in docs:
-    f=open('./docs/'+ doc + '.txt')
-    content = f.read().split()[5:]
-    content = [x for x in content if x != '-1']
+    f = open('docs/'+ doc + '.txt')
+    content = f.read().split()
     doc_list.append(content)
 
 qry_list=[]
 for qry in queries:
-    f=open('./queries/'+ qry + '.txt')
+    f=open('queries/'+ qry + '.txt')
     content = f.read().split()    
-    content = [x for x in content if x != '-1']
     qry_list.append(content)
 
 
@@ -132,12 +130,6 @@ def get_term_weight(lexicon, doc_list, qry_list, scheme = 1):
 def cos_sim(v1,v2):
     return np.dot(v1,v2)/(np.linalg.norm(v1)*np.linalg.norm(v2))
 
-
-# Ranking & Output result
-
-    # * scheme=3, score=0.55128
-    # * scheme=2, score=0.13736
-    # * scheme=1, score=0.01975
     
 lexicon=creat_lexicon(doc_list)
 qtw,dtw=get_term_weight(lexicon, doc_list, qry_list, scheme = 3)
@@ -148,13 +140,13 @@ f.write("Query,RetrievedDocuments\n")
 
 for q in range(len(qry_list)):
     f.write(queries[q] + ",")   
-    
+    print("1")
     for j in range(len(doc_list)):         
         if j==0:
             sim=cos_sim(qtw[q],dtw[j])
         else:
             sim=np.append(sim,cos_sim(qtw[q],dtw[j]))
-        
+    print('2') 
     rank = np.argsort(-sim)
     for j in rank:
         f.write(docs[j]+" ")
