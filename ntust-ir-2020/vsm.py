@@ -1,7 +1,6 @@
 import numpy as np
 import collections 
-
-
+from sklearn.metrics.pairwise import cosine_similarity
 # create qry_list & doc_list
 
 raw_file = open('doc_list.txt', "r")
@@ -119,9 +118,11 @@ def get_term_weight(lexicon, doc_list, qry_list, scheme = 1):
         
         doc_weight=np.multiply(doc_tf,idf)
         qry_weight=np.multiply(qry_tf,idf)
-        
+   
     qry_weight=np.transpose(qry_weight)
+   
     doc_weight=np.transpose(doc_weight)
+    
     return qry_weight,doc_weight
 
 
@@ -138,17 +139,17 @@ fname = "./result.txt"
 f = open(fname, 'w')
 f.write("Query,RetrievedDocuments\n")  
 
+sim = cosine_similarity(qtw, dtw)
+sim = np.array(sim)
 for q in range(len(qry_list)):
-    f.write(queries[q] + ",")   
-    print("1")
-    for j in range(len(doc_list)):         
-        if j==0:
-            sim=cos_sim(qtw[q],dtw[j])
-        else:
-            sim=np.append(sim,cos_sim(qtw[q],dtw[j]))
-    print('2') 
-    rank = np.argsort(-sim)
+    f.write(queries[q] + ",")  
+    t = sim[q]
+    rank = np.argsort(-t)
+    print(rank)
     for j in rank:
-        f.write(docs[j]+" ")
+        f.write(docs[j] + " ")
     f.write("\n")
 f.close()
+
+
+
