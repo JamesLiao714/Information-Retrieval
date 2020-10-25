@@ -23,8 +23,7 @@ for qry in queries:
     qry_list.append(content)
 
 
-# Lexicon
-
+# labelize word
 def creat_lexicon(doc_list):
     flattened = [val for sublist in doc_list for val in sublist]
     all_words=list(set(flattened))
@@ -32,7 +31,7 @@ def creat_lexicon(doc_list):
     return lexicon
 
 
-# Term Frequency
+# TF implementation
 
 def get_tf(lexicon, file_list, weight = "N1", sigma = 0.5):
     
@@ -49,13 +48,9 @@ def get_tf(lexicon, file_list, weight = "N1", sigma = 0.5):
                     tf[i][j] = 1 + log2(count[word])
                 else:
                     tf[i][j] = count[word] #term[i] in doc[j]
-        
-
     return tf
     
-
-
-# Inverse Document Frequency
+# IDF implementatio
 
 def get_idf(lexicon, file_list, weight ='PIF'):
     
@@ -85,13 +80,13 @@ def get_idf(lexicon, file_list, weight ='PIF'):
     return idf
 
 
-# Term Weight
+# Term Weight implementation
 
 def get_term_weight(lexicon, doc_list, qry_list):
    
     doc_tf = get_tf(lexicon, doc_list)
     qry_tf = get_tf(lexicon, qry_list)
-
+ 
     idf = get_idf(lexicon, doc_list)
     
     doc_weight=np.multiply(doc_tf,idf)
@@ -102,26 +97,26 @@ def get_term_weight(lexicon, doc_list, qry_list):
     
     return qry_weight,doc_weight
 
+def main():
+    lexicon=creat_lexicon(doc_list)
+    qtw,dtw=get_term_weight(lexicon, doc_list, qry_list)
 
-# Cosine Similarity
+    fname = "./result.txt"
+    f = open(fname, 'w')
+    f.write("Query,RetrievedDocuments\n")  
 
+    sim = cosine_similarity(qtw, dtw)
+    sim = np.array(sim)
+    for q in range(len(qry_list)):
+        f.write(queries[q] + ",")  
+        t = sim[q]
+        rank = np.argsort(-t)
+        print(rank)
+        for j in rank:
+            f.write(docs[j] + " ")
+        f.write("\n")
+    f.close()
 
+if __name__ == "__main__":
+    main()
     
-lexicon=creat_lexicon(doc_list)
-qtw,dtw=get_term_weight(lexicon, doc_list, qry_list)
-
-fname = "./result.txt"
-f = open(fname, 'w')
-f.write("Query,RetrievedDocuments\n")  
-
-sim = cosine_similarity(qtw, dtw)
-sim = np.array(sim)
-for q in range(len(qry_list)):
-    f.write(queries[q] + ",")  
-    t = sim[q]
-    rank = np.argsort(-t)
-    print(rank)
-    for j in rank:
-        f.write(docs[j] + " ")
-    f.write("\n")
-f.close()
