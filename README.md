@@ -1,7 +1,10 @@
 ## NTUST IR
 ### hw1
 implementation of vsm(vector space model)
+
 * [kaggle link](https://www.kaggle.com/c/2020-information-retrieval-and-applications/leaderboard)
 
-
+```
+sim(q, dj) = cosine_similarity(q, dj)
+```
 

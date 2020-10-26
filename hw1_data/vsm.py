@@ -33,7 +33,7 @@ def creat_lexicon(doc_list):
 
 # TF implementation
 
-def get_tf(lexicon, file_list, weight = "N1", sigma = 0.5):
+def get_tf(lexicon, file_list, weight = "N2"):
     
     tf=np.zeros((len(lexicon), len(file_list)))
 
@@ -47,7 +47,7 @@ def get_tf(lexicon, file_list, weight = "N1", sigma = 0.5):
                 if weight == "N1": 
                     tf[i][j] = 1 + log2(count[word])
                 else:
-                    tf[i][j] = count[word] #term[i] in doc[j]
+                    tf[i][j] = count[word] #term[i] in doc[j]'
     return tf
     
 # IDF implementatio
