@@ -1,4 +1,4 @@
-## NTUST IR
+## IR
 ### hw1
 implementation of vsm(vector space model)
 
